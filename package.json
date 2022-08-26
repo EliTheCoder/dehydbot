@@ -1,0 +1,12 @@
+{
+	"name": "dehydbot",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "GPL-3.0",
+	"devDependencies": {
+		"typescript": "^4.8.2"
+	},
+	"dependencies": {
+		"discord.js": "^14.3.0"
+	}
+}
