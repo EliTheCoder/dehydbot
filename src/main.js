@@ -34,50 +34,48 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
     if (jars.size === 0)
         return;
     for (const [_, jar] of jars) {
-        const response = "```" + (yield dehydrat(jar.url)) + "```";
-        message.channel.send(response);
+        const response = yield dehydrat(jar.url);
+        const parsed = dehydratParse(response);
+        let fields = [];
+        for (const [key, value] of parsed) {
+            fields.push({ name: key, value: value.join(", ") });
+        }
+        message.channel.send({
+            embeds: [
+                {
+                    "title": `DehydRAT Scan Result`,
+                    "color": parsed.size ? 0xcc4444 : 0x44cc44,
+                    fields,
+                }
+            ]
+        });
     }
 }));
-let totalFiles = 0;
+function dehydratParse(data) {
+    let lines = data.split("\n");
+    if (lines.length % 2 !== 0) {
+        lines.pop();
+    }
+    const result = new Map();
+    for (let i = 0; i < lines.length; i += 2) {
+        result.set(lines[i], JSON.parse(lines[i + 1]));
+    }
+    return result;
+}
 function dehydrat(url) {
     return __awaiter(this, void 0, void 0, function* () {
-        totalFiles++;
+        const proc = (0, child_process_1.spawn)(dehydratPath, [url]);
         return new Promise((resolve, reject) => {
-            let result = "";
-            let unlinked = false;
-            const fileName = `./temp${totalFiles}.jar`;
-            downloadFile(url, fileName).then(() => {
-                const proc = (0, child_process_1.spawn)(dehydratPath, [fileName]);
-                proc.stdin.write("\n");
-                proc.stdout.on("data", data => {
-                    result += data.toString();
-                });
-                proc.on("close", code => {
-                    resolve(result);
-                    if (!unlinked)
-                        (0, fs_1.unlinkSync)(fileName);
-                    unlinked = true;
-                });
-                proc.on("exit", code => {
-                    resolve(result);
-                    if (!unlinked)
-                        (0, fs_1.unlinkSync)(fileName);
-                    unlinked = true;
-                });
+            const chunks = [];
+            proc.stdout.on("data", (chunk) => {
+                chunks.push(chunk.toString());
             });
-        });
-    });
-}
-function downloadFile(url, path) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, reject) => {
-            (0, child_process_1.spawn)("wget", [url, "-O", path]).on("close", code => {
-                if (code === 0) {
-                    resolve(null);
-                }
-                else {
-                    reject(new Error("Download failed"));
-                }
+            proc.on("exit", (code) => {
+                resolve(chunks.join(""));
+            }).on("error", (err) => {
+                reject(err);
+            }).on("close", (code) => {
+                resolve(chunks.join(""));
             });
         });
     });
