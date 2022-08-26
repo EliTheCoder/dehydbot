@@ -3,6 +3,10 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"license": "GPL-3.0",
+	"scripts": {
+		"start": "tsc && node dist/main.js",
+		"build": "tsc"
+	},
 	"devDependencies": {
 		"typescript": "^4.8.2"
 	},

@@ -5,11 +5,11 @@ import { spawn } from "child_process";
 import betterLogging from "better-logging";
 betterLogging(console);
 
-if (!existsSync(join(__dirname, "../config.json"))) {
+if (!existsSync(join(__dirname, "./config.json"))) {
     throw new Error("No config.json found");
 }
 
-const { token, dehydratPath } = JSON.parse(readFileSync(join(__dirname, "../config.json"), "utf8"));
+const { token, dehydratPath } = JSON.parse(readFileSync(join(__dirname, "./config.json"), "utf8"));
 
 const client = new Client({
     intents: [
