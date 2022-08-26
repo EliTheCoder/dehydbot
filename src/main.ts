@@ -66,7 +66,7 @@ function dehydratParse(data: string) {
 
 
 async function dehydrat(url: string) {
-    const proc = spawn(dehydratPath, [url]);
+    const proc = spawn(join(__dirname, dehydratPath), [url]);
     return new Promise<string>((resolve, reject) => {
         const chunks: string[] = [];
         proc.stdout.on("data", (chunk) => {
