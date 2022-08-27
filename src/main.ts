@@ -30,19 +30,26 @@ client.on("messageCreate", async (message: Message) => {
     if (jars.size === 0) return;
     console.log(`Found ${jars.size} jar${jars.size === 1 ? "" : "s"}`);
     for (const [_, jar] of jars) {
+        const name = new URL(jar.url).pathname.split("/").pop();
+        const reply = message.reply({
+            embeds: [{
+                title: `Scanning **${name}** for RATs...`,
+                color: 0xcccc44,
+            }],
+        });
         const response = await dehydrat(jar.url);
         const parsed = dehydratParse(response);
 
         let fields: { name: string, value: string }[] = [];
         for (const [key, value] of parsed) {
-            fields.push({ name: key, value: value.join(", ") });
+            fields.push({ name: key, value: value.join("\n") });
         }
 
-        message.reply({
+        (await reply).edit({
             embeds: [
                 {
                     title: `DehydRAT Scan Result`,
-                    description: `${parsed.size} suspicious item${parsed.size === 1 ? "" : "s"} found`,
+                    description: `${parsed.size} suspicious item${parsed.size === 1 ? "" : "s"} found in **${name}**`,
                     color: parsed.size ? 0xcc4444 : 0x44cc44,
                     fields,
                 }
