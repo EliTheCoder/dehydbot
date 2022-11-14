@@ -110,7 +110,7 @@ client.on("messageCreate", async (message: Message) => {
                         {
                             "name": `RAT-Score™`,
                             "value": `${score}%`
-                        }
+                        },
                         {
                             "name": `Permissions`,
                             "value": permissions.join("\n")
