@@ -5,7 +5,8 @@ import {
   ClientOptions,
   GatewayIntentBits,
   Message,
-  Snowflake
+  Snowflake,
+  ActivityType
 } from "discord.js";
 import {
   createWriteStream,
@@ -57,7 +58,7 @@ const client = new Client({
 
 client.once("ready", () => { 
     console.info("DehydBot is online");
-    client.user?.setActivity(`${client.guilds.cache.size} servers for RATs`, {type: "WATCHING"});
+    client.user?.setActivity(`${client.guilds.cache.size} servers for RATs`, {type: ActivityType.Watching});
 });
 
 client.on("messageCreate", async (message: Message) => {
@@ -77,7 +78,7 @@ client.on("messageCreate", async (message: Message) => {
       } ],
     });
     const response = await dehydrat(jar.url);
-    const parsed: [string, string[]] = dehydratParse(response);
+    const parsed: Map<string,string[]> = dehydratParse(response);
 
     let detections: string[] = [];
     let files: string[] = [];
@@ -97,7 +98,8 @@ client.on("messageCreate", async (message: Message) => {
         }
     }
 
-    const score = Math.max(...detections.map(detection => target_list.get(detection)![0]))
+    const scores = detections.map(detection => target_list.get(detection)![0]);
+    const score = Math.max(...scores);
 
 
     (await reply).edit({
