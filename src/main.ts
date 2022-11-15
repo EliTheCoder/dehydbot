@@ -125,7 +125,7 @@ client.on("messageCreate", async (message: Message) => {
                             "name": `Files`,
                             "value": files.join("\n")
                         }
-                    ] : undefined
+                    ] : []
                 }
             ]
         });
