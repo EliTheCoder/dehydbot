@@ -93,7 +93,7 @@ client.on("messageCreate", async (message: Message) => {
 
     let permissions: string[] = [];
     for (let detection of detections) {
-        if (target_list.has(detection) && !permissions.includes(detection)) {
+        if (target_list.has(detection) && !permissions.includes(target_list.get(detection)![1])) {
             permissions.push(target_list.get(detection)![1]);
         }
     }
