@@ -82,8 +82,8 @@ client.on("messageCreate", async (message: Message) => {
 
     let detections: string[] = [];
     let files: string[] = [];
-    for (const [file, detections] of parsed) {
-        for (const detection of detections) {
+    for (const [file, dets] of parsed) {
+        for (const detection of dets) {
             if (!detections.includes(detection)) {
                 detections.push(detection);
             }
