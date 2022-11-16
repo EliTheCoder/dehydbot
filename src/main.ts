@@ -101,6 +101,10 @@ client.on("messageCreate", async (message: Message) => {
     const scores = detections.map(detection => target_list.get(detection)![0]);
     const score = Math.max(...scores);
 
+    let danger = "";
+    if (score >= 90) {
+      danger = "\n**DO NOT USE**";
+    }
 
     (await reply).edit({
             "embeds": [
@@ -111,7 +115,7 @@ client.on("messageCreate", async (message: Message) => {
                     "fields": parsed.size ? [
                         {
                             "name": `RAT-Score™`,
-                            "value": `${score}%`
+                            "value": `${score}% chance of threat${danger}`,
                         },
                         {
                             "name": `Permissions`,
