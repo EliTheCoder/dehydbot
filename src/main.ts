@@ -33,7 +33,7 @@ const target_list: Map<string, [number, string]> = new Map([
     [".minecraft\\mods", [15, "Adds mods to your mods folder"]],
     ["Local Storage", [100, "Looks at your browser's cookies"]],
     ["leveldb", [100, "Looks at your browser's cookies"]],
-    ["APPDATA", [80, "Accesses data from your computer programs"]],
+    ["APPDATA", [20, "Accesses data from your computer programs"]],
     ["Google\\Chrome", [100, "Accesses your saved passwords from Chrome"]],
     ["Login Data", [100, "Accesses your saved passwords from your browsers"]],
     ["user.home", [10, "Gets your operating system"]],
