@@ -78,7 +78,7 @@ client.on("messageCreate", async (message: Message) => {
       } ],
     });
     const response = await dehydrat(jar.url);
-    const parsed: Map<string,string[]> = dehydratParse(response);
+    const [hash, parsed]: [string, Map<string,string[]>] = dehydratParse(response);
 
     let detections: string[] = [];
     let files: string[] = [];
@@ -125,15 +125,19 @@ client.on("messageCreate", async (message: Message) => {
                             "name": `Files`,
                             "value": files.join("\n")
                         }
-                    ] : []
+                    ] : [],
+                    "footer": {
+                        "text": hash
+                    }
                 }
             ]
         });
   }
 });
 
-function dehydratParse(data: string) {
+function dehydratParse(data: string): [string, Map<string, string[]>] {
   let lines = data.split("\n");
+  const hash: string = lines.shift()!;
   if (lines.length % 2 !== 0) {
     lines.pop();
   }
@@ -141,7 +145,7 @@ function dehydratParse(data: string) {
   for (let i = 0; i < lines.length; i += 2) {
     result.set(lines[i], JSON.parse(lines[i + 1]));
   }
-  return result;
+  return [hash, result];
 }
 
 async function dehydrat(url: string) {
